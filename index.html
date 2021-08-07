@@ -27,9 +27,9 @@
                                 <span>Username: </span>{{user.username}} <br>
                                 <span>Website: </span> <a v-bind:href="user.website">{{user.website}}</a> <br>
                                 <span>Email: </span> {{user.email}} <br>
-                                <span>City: </span>{{user.address.city}} <br>
-                                <span>Street: </span>{{user.address.street}} <br>
-                                <span>Suite: </span>{{user.address.suite}} <br>
+                                <span>City: </span>{{user.address?.city}} <br>
+                                <span>Street: </span>{{user.address?.street}} <br>
+                                <span>Suite: </span>{{user.address?.suite}} <br>
                             </p>
                         </div>
                     </div>
@@ -37,8 +37,7 @@
                         <button class="btn btn-primary" v-on:click="buscarId(-1)"
                             :disabled="!(id > 1)">Previous</button>
                         <span class="disable-select" style="margin: 2px 10px; font-weight: bold">ID: {{id}}</span>
-                        <button class="btn btn-primary" v-on:click="buscarId(1)"
-                            :disabled="!(id < 10)">Next</button>
+                        <button class="btn btn-primary" v-on:click="buscarId(1)" :disabled="!(id < 10)">Next</button>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-8 mt-2 pt-3"
@@ -53,6 +52,11 @@
                         </div>
                     </div>
                 </div>
+            </section>
+
+            <footer class="text-center mt-5">
+                <p style="color: rgb(199, 199, 199)">Hecho con humildad y desparche para aplicar lo aprendido hasta ahora xd</p>
+            </footer>
         </div>
     </div>
     <script src="https://unpkg.com/vue@next"></script>
@@ -63,7 +67,7 @@
         const app = createApp({
             setup() {
 
-                let a = 'Testing a users and cats API';
+                let a = 'Testing an API of users and cats';
                 let peticiones = ref([]);
                 let userState = reactive({
                     photo: '',
