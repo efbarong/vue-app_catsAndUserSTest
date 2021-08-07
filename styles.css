@@ -1,0 +1,45 @@
+body, html {
+    padding: 0;
+    margin: 0;
+}
+
+.index {
+    color: #fff;
+    border-radius: 15px;
+    text-align: center;
+    background: rgb(141, 141, 141);
+    padding: 5px 10px;
+    margin-right: 5px;
+}
+
+
+.card-text span {
+    font-weight: bold;
+}
+
+.method {
+    color: green;
+    font-weight: bold;
+    font-size: large;
+}
+.method::before {
+    content: '[ /';
+}
+
+.method::after {
+    content: ' ]';
+}
+
+.fecha {
+    color: rgb(5, 136, 141);
+    font-weight: bold;
+    font-size: medium;
+    margin-left: 5px;
+}
+
+.disable-select {
+    -webkit-user-select: none;  
+    -moz-user-select: none;    
+    -ms-user-select: none;      
+    user-select: none;
+}

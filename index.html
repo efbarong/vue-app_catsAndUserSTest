@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+    <title>Test API Usuarios</title>
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <header class="row text-center mt-2">
+                <h1>{{a}}</h1>
+            </header>
+            <section class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 mt-2 text-center">
+                    <div class="card">
+                        <img v-bind:src="photo" width="200" height="400" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{user.name}}</h5>
+                            <p class="card-text">
+                                <span>Username: </span>{{user.username}} <br>
+                                <span>Website: </span> <a v-bind:href="user.website">{{user.website}}</a> <br>
+                                <span>Email: </span> {{user.email}} <br>
+                                <span>City: </span>{{user.address.city}} <br>
+                                <span>Street: </span>{{user.address.street}} <br>
+                                <span>Suite: </span>{{user.address.suite}} <br>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button class="btn btn-primary" v-on:click="buscarId(-1)"
+                            :disabled="!(id > 1)">Previous</button>
+                        <span class="disable-select" style="margin: 2px 10px; font-weight: bold">ID: {{id}}</span>
+                        <button class="btn btn-primary" v-on:click="buscarId(1)"
+                            :disabled="!(id < 10)">Next</button>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-8 mt-2 pt-3"
+                    style="border: 1px solid rgba(126, 126, 126, 0.2); border-radius: 5px;">
+                    <p class="text-center" style="font-size: 20px;">Last 10 requests</p>
+                    <div class="m-2" v-for="(peticion, index) in peticiones">
+                        <div class="text-center">
+                            <span class="index">{{index}}</span>
+                            <span class="method">{{peticion.method}}</span>
+                            <span class="fecha">{{peticion.fecha}}</span> <br>
+                            <a :href="peticion.peticion">{{peticion.peticion}}</a>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script>
+        const { createApp, ref, reactive, toRefs, watch } = Vue;
+
+        const app = createApp({
+            setup() {
+
+                let a = 'Testing a users and cats API';
+                let peticiones = ref([]);
+                let userState = reactive({
+                    photo: '',
+                    user: {},
+                    id: 0
+                });
+
+                let buscarId = (numero) => {
+                    if (peticiones.value.length >= 10) peticiones.value.pop();
+                    userState.id = userState.id + numero <= 10 && userState.id + numero >= 0 ? userState.id + numero : userState.id;
+
+                    if (userState.id >= 1 && userState.id <= 10) {
+
+                        let urlCats = 'https://cataas.com/cat?width=200&height=400&json=true';
+                        fetch(urlCats).then((res) => res.json()).then(res => {
+                            userState.photo = 'https://cataas.com' + res.url;
+
+                        });
+                        let peticion = 'https://jsonplaceholder.typicode.com/users/' + userState.id;
+                        fetch(peticion).then((res) => res.json()).then(res => {
+                            userState.user = res;
+                            peticiones.value.unshift({
+                                method: 'GET',
+                                peticion,
+                                fecha: moment().format('DD/MM/YYYY hh:mm:ss a')
+                            });
+                        });
+                    }
+                }
+
+                buscarId(1);
+
+                return {
+                    a,
+                    ...toRefs(userState),
+                    buscarId,
+                    peticiones
+                };
+            }
+        });
+    </script>
+
+    <script>
+        app.mount("#app");
+    </script>
+</body>
+
+</html>
